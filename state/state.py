@@ -1,6 +1,7 @@
 import numpy as np
 from shapes import Shape
 
+
 class State:
     def __init__(self):
         # coord

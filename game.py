@@ -1,5 +1,6 @@
 import pygame
 import numpy
+from state.state import State
 
 
 class Game:

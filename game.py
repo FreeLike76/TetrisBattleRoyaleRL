@@ -5,24 +5,25 @@ from game_env.game_env import GameEnv
 
 pygame.init()
 
+
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
         self.clock = pygame.time.Clock()
 
         self.game_state = "start"
         self.running = True
 
     def run(self):
-        if self.running:
+        while self.running:
             if self.game_state == "start":
                 self.start_events()
                 self.start_update()
                 self.start_draw()
 
-            if self.game_state == "load":
-                self.load_draw()
-                self.load_update()
+            elif self.game_state == "play_load":
+                self.play_load_draw()
+                self.play_load_update()
 
             elif self.game_state == "play":
                 self.start_events()
@@ -34,8 +35,8 @@ class Game:
                 self.start_update()
                 self.start_draw()
 
-            # update screen
-
+            pygame.display.update()
+            self.clock.tick(FPS)
         else:
             pygame.quit()
 
@@ -55,31 +56,51 @@ class Game:
 
     def start_draw(self):
         # fill background
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((50, 50, 50))
 
-        # menu
-        self.draw_text("TETRIS BATTLE ROYALE",
-                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT],
-                       20, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.draw_text("Dmytro Geleshko",
-                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT + 20],
-                       12, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.draw_text("IP-91",
-                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT + 40],
-                       12, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.draw_text("PRESS SPACE TO PLAY",
-                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT + 60],
-                       16, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("TETRIS",
+                       [DISPLAY_WIDTH // 2, -20],
+                       200, COLOR_YELLOW, DEFAULT_FONT, True, False)
+        self.draw_text("B A T T L E   R O Y A L E",
+                       [DISPLAY_WIDTH // 2, 180],
+                       70, COLOR_RED, DEFAULT_FONT, True, False)
 
-#   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD
+        self.draw_text("| PLAY",
+                       [40, 320],
+                       60, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("| AGENT L",
+                       [40, 380],
+                       60, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("med",
+                       [275, 385],
+                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("[ L ] to change",
+                       [275, 415],
+                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("| AGENT R",
+                       [40, 440],
+                       60, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("med",
+                       [275, 445],
+                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("[ R ] to change",
+                       [275, 475],
+                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
 
-    def load_draw(self):
+        self.draw_text("By Dmytro Geleshko",
+                       [40, 600],
+                       30, COLOR_WHITE, DEFAULT_FONT, False, False)
+
+
+#   PLAY LOAD    PLAY LOAD   PLAY LOAD    PLAY LOAD   PLAY LOAD    PLAY LOAD   PLAY LOAD    PLAY LOAD
+
+    def play_load_draw(self):
         pass
 
-    def load_update(self):
+    def play_load_update(self):
         pass
 
-#   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY
+#   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY   PLAY   PLAY
 
     def play_events(self):
         pass
@@ -90,7 +111,7 @@ class Game:
     def play_draw(self):
         pass
 
-#   END   END   END   END   END   END   END   END   END   END   END   END   END   END
+#   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END
 
     def end_events(self):
         pass
@@ -101,7 +122,7 @@ class Game:
     def end_draw(self):
         pass
 
-#   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT
+#   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT
 
     def draw_text(self, text, pos, size, color, font_name, make_centered_w=False, make_centered_h=False):
         # define font

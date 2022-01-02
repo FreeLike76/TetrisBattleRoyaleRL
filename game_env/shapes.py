@@ -109,7 +109,7 @@ shape_t = np.array(
       [0, 0, 1, 0, 0],
       [0, 0, 0, 0, 0]]], dtype=np.int32)
 
-shapes = np.array([shape_s, shape_z, shape_i, shape_o, shape_j, shape_l, shape_t])
+shapes = np.array([shape_s, shape_z, shape_i, shape_o, shape_j, shape_l, shape_t], dtype=object)
 shapes_color = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
 
 

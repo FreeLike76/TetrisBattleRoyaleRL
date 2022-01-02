@@ -9,7 +9,7 @@ class GameEnv:
         self.border = 3
         self.map = np.ones((self.top_hidden + 20 + self.border,
                             self.border + 10 + self.border), dtype=np.int32)
-        self.map[0: -3, 3: -3] = 0
+        self.map[0: -self.border, self.border: -self.border] = 0
 
         # shape
         self.shape = None
@@ -45,11 +45,16 @@ class GameEnv:
 
         # end
 
-    def can_move(self):
-        pass
+    def can_move(self, x0, y0, figure):
+        temp = self.map.copy()
+        temp[y0: y0 + figure.shape[0], x0: x0 + figure.shape[1]] += figure
+        if 2 in temp:
+            return False
+        else:
+            return True
 
     def check_row(self):
-        pass
+        temp = self.map.copy()
 
     def check_lost(self):
         pass

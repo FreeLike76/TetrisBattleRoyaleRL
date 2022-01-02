@@ -19,6 +19,10 @@ class Game:
         self.ai_l = 1
         self.ai_r = 1
 
+        # play vars
+        self.env = None
+        self.play_inputs = None
+
     def run(self):
         while self.running:
             if self.game_state == "start":
@@ -65,8 +69,6 @@ class Game:
                         self.ai_r = 0
 
     def start_update(self):
-        # for player: choose action or None
-        # for game_env: apply action
         pass
 
     def start_draw(self):
@@ -126,6 +128,7 @@ class Game:
         pass
 
     def play_load_update(self):
+        self.env = GameEnv()
         pass
 
 #   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY   PLAY   PLAY

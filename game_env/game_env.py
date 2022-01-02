@@ -1,5 +1,5 @@
 import numpy as np
-from shapes import Shape
+from game_env.shapes import Shape
 
 
 class GameEnv:

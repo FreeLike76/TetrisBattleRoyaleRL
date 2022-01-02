@@ -1,10 +1,15 @@
 import pygame
 import numpy
+from settings import *
 from game_env.game_env import GameEnv
 
+pygame.init()
 
 class Game:
     def __init__(self):
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.clock = pygame.time.Clock()
+
         self.game_state = "start"
         self.running = True
 
@@ -37,8 +42,11 @@ class Game:
 #   START   START   START   START   START   START   START   START   START   START   START
 
     def start_events(self):
-        # app close
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.game_state = "load"
 
     def start_update(self):
         # for player: choose action or None
@@ -46,8 +54,22 @@ class Game:
         pass
 
     def start_draw(self):
-        # for game_env draw
-        pass
+        # fill background
+        self.screen.fill((0, 0, 0))
+
+        # menu
+        self.draw_text("TETRIS BATTLE ROYALE",
+                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT],
+                       20, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("Dmytro Geleshko",
+                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT + 20],
+                       12, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("IP-91",
+                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT + 40],
+                       12, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("PRESS SPACE TO PLAY",
+                       [SCREEN_WIDTH // 2, SCREEN_HEIGHT + 60],
+                       16, COLOR_WHITE, DEFAULT_FONT, True, True)
 
 #   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD
 
@@ -80,5 +102,15 @@ class Game:
         pass
 
 #   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT
-    def draw_text(self):
-        pass
+
+    def draw_text(self, text, pos, size, color, font_name, make_centered_w=False, make_centered_h=False):
+        # define font
+        font = pygame.font.SysFont(font_name, size)
+        # render font
+        on_screen_text = font.render(text, False, color)
+        # place at pos
+        if make_centered_w:
+            pos[0] = pos[0] - on_screen_text.get_size()[0] // 2
+        if make_centered_h:
+            pos[1] = pos[1] - on_screen_text.get_size()[1] // 2
+        self.screen.blit(on_screen_text, pos)

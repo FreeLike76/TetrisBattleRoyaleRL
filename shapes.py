@@ -115,10 +115,10 @@ shapes_color = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 16
 
 class Shape:
     def __init__(self):
-        # x is close to center
-        self.x = np.random.randint(7, 9)
+        # x is close to center: int [5, 7)
+        self.x = np.random.randint(5, 7)
         # y is on top
-        self.y = 2
+        self.y = 0
         self.rotation = 0
 
         seed = np.random.randint(0, shapes.shape[0] + 1)

@@ -2,7 +2,7 @@ import numpy as np
 from shapes import Shape
 
 
-class State:
+class GameEnv:
     def __init__(self):
         # coord
         self.top_hidden = 4
@@ -14,7 +14,7 @@ class State:
         # shape
         self.shape = None
 
-        # state
+        # game_env
         self.running = True
         self.score = 0
 
@@ -46,4 +46,10 @@ class State:
         # end
 
     def can_move(self):
+        pass
+
+    def check_row(self):
+        pass
+
+    def check_lost(self):
         pass

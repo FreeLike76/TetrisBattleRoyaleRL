@@ -1,6 +1,6 @@
 import pygame
 import numpy
-from state.state import State
+from game_env.game_env import GameEnv
 
 
 class Game:
@@ -14,15 +14,25 @@ class Game:
                 self.start_events()
                 self.start_update()
                 self.start_draw()
+
+            if self.game_state == "load":
+                self.load_draw()
+                self.load_update()
+
             elif self.game_state == "play":
                 self.start_events()
                 self.start_update()
                 self.start_draw()
+
             elif self.game_state == "end":
                 self.start_events()
                 self.start_update()
                 self.start_draw()
-        pygame.quit()
+
+            # update screen
+
+        else:
+            pygame.quit()
 
 #   START   START   START   START   START   START   START   START   START   START   START
 
@@ -32,11 +42,19 @@ class Game:
 
     def start_update(self):
         # for player: choose action or None
-        # for state: apply action
+        # for game_env: apply action
         pass
 
     def start_draw(self):
-        # for state draw
+        # for game_env draw
+        pass
+
+#   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD   LOAD    LOAD
+
+    def load_draw(self):
+        pass
+
+    def load_update(self):
         pass
 
 #   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY

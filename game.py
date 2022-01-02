@@ -26,12 +26,16 @@ class Game:
 #   START   START   START   START   START   START   START   START   START   START   START
 
     def start_events(self):
+        # app close
         pass
 
     def start_update(self):
+        # for player: choose action or None
+        # for state: apply action
         pass
 
     def start_draw(self):
+        # for state draw
         pass
 
 #   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY  PLAY   PLAY

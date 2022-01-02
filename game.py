@@ -65,27 +65,40 @@ class Game:
                        [DISPLAY_WIDTH // 2, 180],
                        70, COLOR_RED, DEFAULT_FONT, True, False)
 
-        self.draw_text("| PLAY",
-                       [40, 320],
-                       60, COLOR_WHITE, DEFAULT_FONT, False, False)
-        self.draw_text("| AGENT L",
-                       [40, 380],
-                       60, COLOR_WHITE, DEFAULT_FONT, False, False)
-        self.draw_text("med",
-                       [275, 385],
-                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
-        self.draw_text("[ L ] to change",
-                       [275, 415],
-                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
-        self.draw_text("| AGENT R",
-                       [40, 440],
-                       60, COLOR_WHITE, DEFAULT_FONT, False, False)
-        self.draw_text("med",
-                       [275, 445],
-                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
-        self.draw_text("[ R ] to change",
-                       [275, 475],
-                       25, COLOR_WHITE, DEFAULT_FONT, False, False)
+        self.draw_text("AGENT L",
+                       [DISPLAY_WIDTH // 2 - 240, 375],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("AI: MEDIUM",
+                       [DISPLAY_WIDTH // 2 - 240, 425],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("[ L ] TO CHANGE",
+                       [DISPLAY_WIDTH // 2 - 240, 465],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("|",
+                       [DISPLAY_WIDTH // 2 - 100, 390],
+                       155, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("PLAY",
+                       [DISPLAY_WIDTH // 2, 350],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("[SPACE]",
+                       [DISPLAY_WIDTH // 2, 410],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("|",
+                       [DISPLAY_WIDTH // 2 + 100, 390],
+                       155, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("AGENT R",
+                       [DISPLAY_WIDTH // 2 + 240, 375],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("AI: MEDIUM",
+                       [DISPLAY_WIDTH // 2 + 240, 425],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("[ R ] TO CHANGE",
+                       [DISPLAY_WIDTH // 2 + 240, 465],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
 
         self.draw_text("By Dmytro Geleshko",
                        [40, 600],

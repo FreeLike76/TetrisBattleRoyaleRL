@@ -14,6 +14,11 @@ class Game:
         self.game_state = "start"
         self.running = True
 
+        # start vars
+        self.ai_difficulties = ["EASY", "MEDIUM", "HARD"]
+        self.ai_l = 1
+        self.ai_r = 1
+
     def run(self):
         while self.running:
             if self.game_state == "start":
@@ -46,8 +51,18 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.game_state = "load"
+            if event.type == pygame.KEYDOWN:
+                # movement
+                if event.key == pygame.K_SPACE:
+                    self.game_state = "load_play"
+                if event.key == pygame.K_a:
+                    self.ai_l += 1
+                    if self.ai_l == len(self.ai_difficulties):
+                        self.ai_l = 0
+                if event.key == pygame.K_d:
+                    self.ai_r += 1
+                    if self.ai_r == len(self.ai_difficulties):
+                        self.ai_r = 0
 
     def start_update(self):
         # for player: choose action or None
@@ -59,8 +74,8 @@ class Game:
         self.screen.fill((50, 50, 50))
 
         self.draw_text("TETRIS",
-                       [DISPLAY_WIDTH // 2, -20],
-                       200, COLOR_YELLOW, DEFAULT_FONT, True, False)
+                       [DISPLAY_WIDTH // 2, 0],
+                       280, COLOR_YELLOW, DEFAULT_FONT, True, False)
         self.draw_text("B A T T L E   R O Y A L E",
                        [DISPLAY_WIDTH // 2, 180],
                        70, COLOR_RED, DEFAULT_FONT, True, False)
@@ -68,10 +83,10 @@ class Game:
         self.draw_text("AGENT L",
                        [DISPLAY_WIDTH // 2 - 240, 375],
                        60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.draw_text("AI: MEDIUM",
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_l],
                        [DISPLAY_WIDTH // 2 - 240, 425],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.draw_text("[ L ] TO CHANGE",
+        self.draw_text("[A] TO CHANGE",
                        [DISPLAY_WIDTH // 2 - 240, 465],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
 
@@ -93,10 +108,10 @@ class Game:
         self.draw_text("AGENT R",
                        [DISPLAY_WIDTH // 2 + 240, 375],
                        60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.draw_text("AI: MEDIUM",
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_r],
                        [DISPLAY_WIDTH // 2 + 240, 425],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.draw_text("[ R ] TO CHANGE",
+        self.draw_text("[D] TO CHANGE",
                        [DISPLAY_WIDTH // 2 + 240, 465],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
 

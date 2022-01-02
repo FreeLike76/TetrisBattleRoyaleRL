@@ -19,4 +19,4 @@ COLOR_RED = (255, 0, 0)
 COLOR_YELLOW = (255, 223, 0)
 
 # FONT
-DEFAULT_FONT = "impact"
+DEFAULT_FONT = "unispace"

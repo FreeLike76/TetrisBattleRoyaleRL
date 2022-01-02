@@ -1,15 +1,14 @@
 import numpy as np
 from game_env.shapes import Shape
+from settings import *
 
 
 class GameEnv:
     def __init__(self):
         # coord
-        self.top_hidden = 4
-        self.border = 3
-        self.map = np.ones((self.top_hidden + 20 + self.border,
-                            self.border + 10 + self.border), dtype=np.int32)
-        self.map[0: -self.border, self.border: -self.border] = 0
+        self.map = np.ones((GAME_MAP_TOP_HIDDEN + 20 + GAME_MAP_BORDERS,
+                            GAME_MAP_BORDERS + 10 + GAME_MAP_BORDERS), dtype=np.int32)
+        self.map[0: -GAME_MAP_BORDERS, GAME_MAP_BORDERS: -GAME_MAP_BORDERS] = 0
 
         # shape
         self.shape = None

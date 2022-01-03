@@ -16,11 +16,11 @@ class GameEnv:
 
         # game_env
         self.running = True
-        self.score = 0
 
     def step(self, action):
+        reward = 0
         if not self.running:
-            return
+            return reward
         # actions:
         # 0 is skip
         # 1 is left
@@ -48,11 +48,9 @@ class GameEnv:
         else:
             self.lock_figure()
 
-        self.score += self.remove_full_rows()
+        reward += self.remove_full_rows()
 
-        # check win
-        # check lose
-        # end
+        return reward
 
     def at(self, x, y):
         return self.map[GAME_SHAPE_TOP_HIDDEN + y, GAME_SHAPE_BORDERS + x]

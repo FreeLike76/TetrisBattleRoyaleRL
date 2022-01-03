@@ -1,7 +1,6 @@
 import time
-
 import pygame
-import numpy
+import numpy as np
 from settings import *
 from game_env.game_env import GameEnv
 
@@ -22,8 +21,9 @@ class Game:
         self.ai_r = 1
 
         # play vars
-        self.env = None
+        self.game_envs = None
         self.play_inputs = 0
+        self.scores = None
 
     def run(self):
         while self.running:
@@ -141,6 +141,7 @@ class Game:
 
     def play_load_update(self):
         self.game_envs = [GameEnv() for _ in range(3)]
+        self.scores = [0, 0, 0]
         print(self.game_envs[0].map)
         self.game_state = "play"
 
@@ -159,12 +160,29 @@ class Game:
                     self.play_inputs = 3
                 if event.key == pygame.K_w:
                     self.play_inputs = 4
+                if event.key == pygame.K_ESCAPE:
+                    self.game_state = "end"
 
     def play_update(self):
-        self.game_envs[0].step(self.play_inputs)
-        self.game_envs[1].step(self.play_inputs)
-        self.game_envs[2].step(self.play_inputs)
+        all_stopped = True
+        for game in self.game_envs:
+            if game.running:
+                all_stopped = False
+                break
+        if all_stopped:
+            self.game_state = "end"
+            return
+
+        # AGENT-L
+        self.scores[0] += self.game_envs[0].step(np.random.randint(0, 5))
+
+        # PLAYER
+        self.scores[1] += self.game_envs[1].step(self.play_inputs)
         self.play_inputs = 0
+
+        # AGENT-R
+        self.scores[2] += self.game_envs[2].step(np.random.randint(0, 5))
+
 
     def play_draw(self):
         self.screen.fill(COLOR_DARK_GRAY)
@@ -216,8 +234,10 @@ class Game:
                     if figure_y0 + figure_y > GAME_SHAPE_TOP_HIDDEN \
                             and self.game_envs[i].shape.at(figure_x, figure_y) == 1:
                         pygame.draw.rect(self.screen,  self.game_envs[i].shape.color,
-                                         pygame.Rect(game_field_x + (figure_x0 + figure_x - GAME_SHAPE_BORDERS) * CELL,
-                                                     game_field_y + int((figure_y0 + figure_y - GAME_SHAPE_TOP_HIDDEN) * CELL),
+                                         pygame.Rect(game_field_x
+                                                     + (figure_x0 + figure_x - GAME_SHAPE_BORDERS) * CELL,
+                                                     game_field_y
+                                                     + int((figure_y0 + figure_y - GAME_SHAPE_TOP_HIDDEN) * CELL),
                                                      CELL, CELL))
             # next fields
             next_field_x = game_field_x + GAME_WIDTH - NEXT_WIDTH
@@ -227,7 +247,7 @@ class Game:
             self.draw_text("SCORE",
                            [game_field_x, next_field_y],
                            60, COLOR_WHITE, DEFAULT_FONT, False, False)
-            self.draw_text(str(self.game_envs[i].score),
+            self.draw_text(str(self.scores[i]),
                            [game_field_x, next_field_y + 60],
                            60, COLOR_WHITE, DEFAULT_FONT, False, False)
 
@@ -243,17 +263,82 @@ class Game:
                         pygame.draw.rect(self.screen,  self.game_envs[i].next_shape.color,
                                          pygame.Rect(next_field_x + next_x * CELL, next_field_y + next_y * CELL,
                                                      CELL, CELL))
+            if not self.game_envs[i].running:
+                pygame.draw.line(self.screen, COLOR_RED,
+                                 (game_field_x, game_field_y),
+                                 (game_field_x + GAME_WIDTH, game_field_y + GAME_HEIGHT), 3)
+                pygame.draw.line(self.screen, COLOR_RED,
+                                 (game_field_x + GAME_WIDTH, game_field_y),
+                                 (game_field_x, game_field_y + GAME_HEIGHT), 3)
 
 #   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END
 
     def end_events(self):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.game_state = "start"
 
     def end_update(self):
         pass
 
     def end_draw(self):
-        pass
+        # fill background
+        self.screen.fill(COLOR_DARK_GRAY)
+
+        self.draw_text("TETRIS",
+                       [DISPLAY_WIDTH // 2, 70],
+                       280, COLOR_YELLOW, DEFAULT_FONT, True, False)
+        self.draw_text("B A T T L E   R O Y A L E",
+                       [DISPLAY_WIDTH // 2, 250],
+                       70, COLOR_RED, DEFAULT_FONT, True, False)
+
+        self.draw_text("AGENT-L",
+                       [DISPLAY_WIDTH // 2 - 240, 550],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_l],
+                       [DISPLAY_WIDTH // 2 - 240, 600],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("SCORE: " + str(self.scores[0]),
+                       [DISPLAY_WIDTH // 2 - 240, 640],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("|",
+                       [DISPLAY_WIDTH // 2 - 100, 590],
+                       155, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("PLAYER",
+                       [DISPLAY_WIDTH // 2, 550],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("SCORE: " + str(self.scores[1]),
+                       [DISPLAY_WIDTH // 2, 600],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("PRESS",
+                       [DISPLAY_WIDTH // 2, 750],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("[SPACE]",
+                       [DISPLAY_WIDTH // 2, 800],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("TO PLAY",
+                       [DISPLAY_WIDTH // 2, 840],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("|",
+                       [DISPLAY_WIDTH // 2 + 100, 590],
+                       155, COLOR_WHITE, DEFAULT_FONT, True, True)
+
+        self.draw_text("AGENT-R",
+                       [DISPLAY_WIDTH // 2 + 240, 550],
+                       60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_r],
+                       [DISPLAY_WIDTH // 2 + 240, 600],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.draw_text("SCORE: " + str(self.scores[2]),
+                       [DISPLAY_WIDTH // 2 + 240, 640],
+                       35, COLOR_WHITE, DEFAULT_FONT, True, True)
 
 #   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT
 

@@ -161,8 +161,10 @@ class Game:
                     self.play_inputs = 4
 
     def play_update(self):
-        #self.env.step(self.play_inputs)
-        pass
+        self.game_envs[0].step(self.play_inputs)
+        self.game_envs[1].step(self.play_inputs)
+        self.game_envs[2].step(self.play_inputs)
+        self.play_inputs = 0
 
     def play_draw(self):
         self.screen.fill(COLOR_DARK_GRAY)
@@ -189,10 +191,58 @@ class Game:
                        [840, 165],
                        60, COLOR_WHITE, DEFAULT_FONT, True, True)
         for i in range(3):
-            x0 = i * GAME_WIDTH + (i + 1) * CELL
+            game_field_x = i * GAME_WIDTH + (i + 1) * CELL
+            game_field_y = TOP_OFFSET
 
-            self.draw_grid(x0, TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT, GAME_MAP_WIDTH, GAME_MAP_HEIGHT)
-            self.draw_box(x0, TOP_OFFSET, GAME_WIDTH, GAME_HEIGHT, COLOR_RED, 3)
+            # game fields
+            self.draw_grid(game_field_x, game_field_y,
+                           GAME_WIDTH, GAME_HEIGHT,
+                           GAME_SHAPE_WIDTH, GAME_SHAPE_HEIGHT)
+            self.draw_box(game_field_x, game_field_y,
+                          GAME_WIDTH, GAME_HEIGHT,
+                          COLOR_RED, 3)
+            # draw locked
+            for map_x in range(GAME_SHAPE_WIDTH):
+                for map_y in range(GAME_SHAPE_HEIGHT):
+                    if self.game_envs[i].at(map_x, map_y):
+                        pygame.draw.rect(self.screen, COLOR_LIGHT_GRAY,
+                                         pygame.Rect(game_field_x + map_x * CELL, game_field_y + map_y * CELL,
+                                                     CELL, CELL))
+            # draw figure
+            for figure_x in range(NEXT_SHAPE_WIDTH):
+                for figure_y in range(NEXT_SHAPE_HEIGHT):
+                    figure_x0 = self.game_envs[i].shape.x
+                    figure_y0 = self.game_envs[i].shape.y - 1
+                    if figure_y0 + figure_y > GAME_SHAPE_TOP_HIDDEN \
+                            and self.game_envs[i].shape.at(figure_x, figure_y) == 1:
+                        pygame.draw.rect(self.screen,  self.game_envs[i].shape.color,
+                                         pygame.Rect(game_field_x + (figure_x0 + figure_x - GAME_SHAPE_BORDERS) * CELL,
+                                                     game_field_y + int((figure_y0 + figure_y - GAME_SHAPE_TOP_HIDDEN) * CELL),
+                                                     CELL, CELL))
+            # next fields
+            next_field_x = game_field_x + GAME_WIDTH - NEXT_WIDTH
+            next_field_y = game_field_y + GAME_HEIGHT + CELL
+
+            # scores
+            self.draw_text("SCORE",
+                           [game_field_x, next_field_y],
+                           60, COLOR_WHITE, DEFAULT_FONT, False, False)
+            self.draw_text("10",
+                           [game_field_x, next_field_y + 60],
+                           60, COLOR_WHITE, DEFAULT_FONT, False, False)
+
+            self.draw_grid(next_field_x, next_field_y,
+                           NEXT_WIDTH, NEXT_HEIGHT,
+                           NEXT_SHAPE_WIDTH, NEXT_SHAPE_HEIGHT)
+            self.draw_box(next_field_x, next_field_y,
+                          NEXT_WIDTH, NEXT_HEIGHT,
+                          COLOR_RED, 3)
+            for next_x in range(NEXT_SHAPE_WIDTH):
+                for next_y in range(NEXT_SHAPE_HEIGHT):
+                    if self.game_envs[i].next_shape.at(next_x, next_y) == 1:
+                        pygame.draw.rect(self.screen,  self.game_envs[i].next_shape.color,
+                                         pygame.Rect(next_field_x + next_x * CELL, next_field_y + next_y * CELL,
+                                                     CELL, CELL))
 
 #   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END   END
 
@@ -233,5 +283,5 @@ class Game:
 
     def draw_box(self, x0, y0, width, height, color, border_width=1):
         pygame.draw.rect(self.screen, color,
-                         pygame.Rect(x0, y0,
-                                     width, height), border_width)
+                         pygame.Rect(x0 - border_width, y0 - border_width,
+                                     width + border_width, height + border_width), border_width)

@@ -102,7 +102,7 @@ class Shape:
         self.y = 0
         self.rotation = 0
 
-        seed = np.random.randint(0, shapes.shape[0] + 1)
+        seed = np.random.randint(0, shapes.shape[0])
 
         self.shape = shapes[seed]
         self.color = shapes_color[seed]
@@ -114,12 +114,15 @@ class Shape:
     def get_rotated(self):
         # returns rotated shape but does not rotate it
         rotation = self.rotation + 1
-        if rotation == self.shape.shape[3]:
+        if rotation == self.shape.shape[0]:
             rotation = 0
         return self.shape[rotation].copy()
 
     def rotate(self):
         # rotates the shape
         self.rotation += 1
-        if self.rotation == self.shape.shape[3]:
+        if self.rotation == self.shape.shape[0]:
             self.rotation = 0
+
+    def at(self, x, y):
+        return self.shape[self.rotation, y, x]

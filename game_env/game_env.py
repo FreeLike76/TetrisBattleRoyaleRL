@@ -19,6 +19,8 @@ class GameEnv:
         self.score = 0
 
     def step(self, action):
+        if not self.running:
+            return
         # actions:
         # 0 is skip
         # 1 is left
@@ -70,6 +72,8 @@ class GameEnv:
         self.map[int(y): int(y + figure.shape[0]), x: x + figure.shape[1]] += figure
         self.shape = self.next_shape
         self.next_shape = Shape()
+        if y < GAME_SHAPE_TOP_HIDDEN:
+            self.running = False
 
     def remove_full_rows(self):
         reward = 0

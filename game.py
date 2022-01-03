@@ -227,7 +227,7 @@ class Game:
             self.draw_text("SCORE",
                            [game_field_x, next_field_y],
                            60, COLOR_WHITE, DEFAULT_FONT, False, False)
-            self.draw_text("10",
+            self.draw_text(str(self.game_envs[i].score),
                            [game_field_x, next_field_y + 60],
                            60, COLOR_WHITE, DEFAULT_FONT, False, False)
 

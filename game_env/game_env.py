@@ -46,6 +46,7 @@ class GameEnv:
         else:
             self.lock_figure()
 
+        self.score += self.remove_full_rows()
 
         # check win
         # check lose
@@ -70,8 +71,34 @@ class GameEnv:
         self.shape = self.next_shape
         self.next_shape = Shape()
 
-    def check_row(self):
-        temp = self.map.copy()
+    def remove_full_rows(self):
+        reward = 0
+        full = self.map[GAME_SHAPE_TOP_HIDDEN: -GAME_SHAPE_BORDERS, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS]
+        full = np.where(full.sum(axis=1) == 10)[0]
+        if full.size > 0:
+            reward = full.size * 10
+
+            # to get indexes of the game screen
+            full = full + GAME_SHAPE_TOP_HIDDEN
+
+            # remove full rows
+            self.map[full, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = 0
+
+            # get non-empty rows
+            partial = self.map[GAME_SHAPE_TOP_HIDDEN: -GAME_SHAPE_BORDERS, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS]
+            partial = np.where(partial.sum(axis=1) != 0)[0]
+
+            # if there are levitating non-empty rows
+            if partial.size > 0:
+                # get their indexes
+                partial = partial + GAME_SHAPE_TOP_HIDDEN
+                bottom = self.map.shape[0] - GAME_SHAPE_BORDERS
+                # move them to bottom
+                self.map[bottom-partial.size: bottom, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = \
+                    self.map[partial, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS]
+                # everything above must be cleared
+                self.map[0: bottom-partial.size, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = 0
+        return reward
 
     def check_lost(self):
         pass

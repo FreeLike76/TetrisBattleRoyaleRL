@@ -53,7 +53,7 @@ class Agent:
                             enable_double_dqn=True,
                             enable_dueling_network=True)
 
-    def compile_model(self):
+    def compile(self):
         self.dqn.compile(tf.keras.optimizers.Adam(learning_rate=0.001, clipnorm=1.0), metrics=["mean_squared_error"])
 
     def load_model_weights(self, path):

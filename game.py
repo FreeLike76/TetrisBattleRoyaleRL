@@ -1,4 +1,5 @@
 import time
+from agent_rl.agent import Agent
 import pygame
 import numpy as np
 from settings import *
@@ -22,6 +23,7 @@ class Game:
 
         # play vars
         self.game_envs = None
+        self.agent_l = None
         self.play_inputs = 0
         self.scores = None
 
@@ -140,6 +142,12 @@ class Game:
         pygame.display.update()
 
     def play_load_update(self):
+        self.agent_l = Agent()
+        self.agent_l.build_model()
+        self.agent_l.build_agent()
+        self.agent_l.compile()
+        self.agent_l.load_model_weights(r"agent_rl/saved/dqn_v2.h5")
+
         self.game_envs = [GameEnv() for _ in range(3)]
         self.scores = [0, 0, 0]
         print(self.game_envs[0].map)
@@ -174,7 +182,8 @@ class Game:
             return
 
         # AGENT-L
-        self.scores[0] += self.game_envs[0].step(np.random.randint(0, 5))
+        action = self.agent_l.get_action(self.game_envs[0].map, self.game_envs[0].shape, self.game_envs[0].next_shape)
+        self.scores[0] += self.game_envs[0].step(action)
 
         # PLAYER
         self.scores[1] += self.game_envs[1].step(self.play_inputs)

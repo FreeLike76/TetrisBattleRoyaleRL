@@ -36,8 +36,6 @@ class GameEnv:
         elif action == 3:
             if self.can_move(self.shape.x, int(self.shape.y + 1), self.shape.get_shape()):
                 self.shape.y += 1
-            else:
-                self.lock_figure()
         elif action == 4:
             if self.can_move(self.shape.x, int(self.shape.y), self.shape.get_rotated()):
                 self.shape.rotate()
@@ -65,9 +63,9 @@ class GameEnv:
 
     def lock_figure(self):
         x = self.shape.x
-        y = self.shape.y
+        y = int(self.shape.y)
         figure = self.shape.get_shape()
-        self.map[int(y): int(y + figure.shape[0]), x: x + figure.shape[1]] += figure
+        self.map[y: y + figure.shape[0], x: x + figure.shape[1]] += figure
         self.shape = self.next_shape
         self.next_shape = Shape()
         if y < GAME_SHAPE_TOP_HIDDEN:

@@ -100,6 +100,5 @@ class GameEnv:
                 self.map[0: bottom-partial.size, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = 0
         return reward
 
-
     def check_lost(self):
         pass

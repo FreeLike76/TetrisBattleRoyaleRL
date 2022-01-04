@@ -1,5 +1,5 @@
 import time
-from agent_rl.agent import Agent
+from agent_rl.agent_rl import Agent
 import pygame
 import numpy as np
 from settings import *
@@ -18,12 +18,12 @@ class Game:
 
         # start vars
         self.ai_difficulties = ["EASY", "MEDIUM", "HARD"]
-        self.ai_l = 1
-        self.ai_r = 1
+        self.ai_rl = 1
+        self.ai_h = 1
 
         # play vars
         self.game_envs = None
-        self.agent_l = None
+        self.agent_rl = None
         self.play_inputs = 0
         self.scores = None
 
@@ -66,13 +66,13 @@ class Game:
                 if event.key == pygame.K_SPACE:
                     self.game_state = "play_load"
                 if event.key == pygame.K_a:
-                    self.ai_l += 1
-                    if self.ai_l == len(self.ai_difficulties):
-                        self.ai_l = 0
+                    self.ai_rl += 1
+                    if self.ai_rl == len(self.ai_difficulties):
+                        self.ai_rl = 0
                 if event.key == pygame.K_d:
-                    self.ai_r += 1
-                    if self.ai_r == len(self.ai_difficulties):
-                        self.ai_r = 0
+                    self.ai_h += 1
+                    if self.ai_h == len(self.ai_difficulties):
+                        self.ai_h = 0
 
     def start_update(self):
         pass
@@ -88,10 +88,10 @@ class Game:
                        [DISPLAY_WIDTH // 2, 250],
                        70, COLOR_RED, DEFAULT_FONT, True, False)
 
-        self.draw_text("AGENT-L",
+        self.draw_text("AGENT-RL",
                        [DISPLAY_WIDTH // 2 - 240, 550],
                        60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.draw_text("AI: " + self.ai_difficulties[self.ai_l],
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_rl],
                        [DISPLAY_WIDTH // 2 - 240, 600],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
         self.draw_text("[A] TO CHANGE",
@@ -116,10 +116,10 @@ class Game:
                        [DISPLAY_WIDTH // 2 + 100, 590],
                        155, COLOR_WHITE, DEFAULT_FONT, True, True)
 
-        self.draw_text("AGENT-R",
+        self.draw_text("AGENT-H",
                        [DISPLAY_WIDTH // 2 + 240, 550],
                        60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.draw_text("AI: " + self.ai_difficulties[self.ai_r],
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_h],
                        [DISPLAY_WIDTH // 2 + 240, 600],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
         self.draw_text("[D] TO CHANGE",
@@ -142,11 +142,11 @@ class Game:
         pygame.display.update()
 
     def play_load_update(self):
-        self.agent_l = Agent()
-        self.agent_l.build_model()
-        self.agent_l.build_agent()
-        self.agent_l.compile()
-        self.agent_l.load_model_weights(r"agent_rl/saved/dqn_v2.h5")
+        self.agent_rl = Agent()
+        self.agent_rl.build_model()
+        self.agent_rl.build_agent()
+        self.agent_rl.compile()
+        self.agent_rl.load_model_weights(r"agent_rl/saved/dqn_v7.h5")
 
         self.game_envs = [GameEnv() for _ in range(3)]
         self.scores = [0, 0, 0]
@@ -181,17 +181,16 @@ class Game:
             self.game_state = "end"
             return
 
-        # AGENT-L
-        action = self.agent_l.get_action(self.game_envs[0].map, self.game_envs[0].shape, self.game_envs[0].next_shape)
+        # AGENT-RL
+        action = self.agent_rl.get_action(self.game_envs[0].map, self.game_envs[0].shape, self.game_envs[0].next_shape)
         self.scores[0] += self.game_envs[0].step(action)
 
         # PLAYER
         self.scores[1] += self.game_envs[1].step(self.play_inputs)
         self.play_inputs = 0
 
-        # AGENT-R
+        # AGENT-H
         self.scores[2] += self.game_envs[2].step(np.random.randint(0, 5))
-
 
     def play_draw(self):
         self.screen.fill(COLOR_DARK_GRAY)
@@ -206,7 +205,7 @@ class Game:
                        [750, 75],
                        80, COLOR_RED, DEFAULT_FONT, True, False)
 
-        self.draw_text("AGENT-L",
+        self.draw_text("AGENT-RL",
                        [180, 165],
                        60, COLOR_WHITE, DEFAULT_FONT, True, True)
 
@@ -214,7 +213,7 @@ class Game:
                        [510, 165],
                        60, COLOR_WHITE, DEFAULT_FONT, True, True)
 
-        self.draw_text("AGENT-R",
+        self.draw_text("AGENT-H",
                        [840, 165],
                        60, COLOR_WHITE, DEFAULT_FONT, True, True)
         for i in range(3):
@@ -304,10 +303,10 @@ class Game:
                        [DISPLAY_WIDTH // 2, 250],
                        70, COLOR_RED, DEFAULT_FONT, True, False)
 
-        self.draw_text("AGENT-L",
+        self.draw_text("AGENT-RL",
                        [DISPLAY_WIDTH // 2 - 240, 550],
                        60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.draw_text("AI: " + self.ai_difficulties[self.ai_l],
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_rl],
                        [DISPLAY_WIDTH // 2 - 240, 600],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
         self.draw_text("SCORE: " + str(self.scores[0]),
@@ -339,10 +338,10 @@ class Game:
                        [DISPLAY_WIDTH // 2 + 100, 590],
                        155, COLOR_WHITE, DEFAULT_FONT, True, True)
 
-        self.draw_text("AGENT-R",
+        self.draw_text("AGENT-H",
                        [DISPLAY_WIDTH // 2 + 240, 550],
                        60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.draw_text("AI: " + self.ai_difficulties[self.ai_r],
+        self.draw_text("AI: " + self.ai_difficulties[self.ai_h],
                        [DISPLAY_WIDTH // 2 + 240, 600],
                        35, COLOR_WHITE, DEFAULT_FONT, True, True)
         self.draw_text("SCORE: " + str(self.scores[2]),

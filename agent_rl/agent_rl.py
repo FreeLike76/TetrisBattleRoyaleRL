@@ -81,4 +81,4 @@ class Agent:
 
     def get_action(self, game_map, shape, next_shape):
         observation = self._encode_observation(game_map, shape, next_shape)
-        self.dqn.forward(observation)
+        return self.dqn.forward(observation)

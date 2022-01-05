@@ -66,7 +66,7 @@ class AgentRL(Agent):
 
         # next shape on map, assuming y0 = 0
         temp_next_shape = np.zeros((20, 10))
-        x0 = next_shape.x
+        x0 = next_shape.x - GAME_SHAPE_BORDERS
         next_shape = next_shape.get_shape()
         temp_next_shape[0: next_shape.shape[0], x0: x0 + next_shape.shape[1]] += next_shape
 

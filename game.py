@@ -265,49 +265,24 @@ class Game:
                             [self.view.width // 2, 250],
                             70, COLOR_RED, DEFAULT_FONT, True, False)
 
-        self.view.draw_text("AGENT-RL",
-                            [self.view.width // 2 - 240, 550],
-                            60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.view.draw_text("AI: " + self.ai_difficulties[self.ai_rl],
-                            [self.view.width // 2 - 240, 600],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.view.draw_text("SCORE: " + str(self.scores[0]),
-                            [self.view.width // 2 - 240, 640],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        for i in range(len(self.game_envs)):
+            x = i * GAME_WIDTH + (i + 1) * CELL + GAME_WIDTH // 2
+            if i == 0:
+                self.view.draw_text("PLAYER",
+                                    [x, 550],
+                                    60, COLOR_YELLOW, DEFAULT_FONT, True, True)
+            else:
+                self.view.draw_text(self.agents_names[i - 1],
+                                    [x, 550],
+                                    60, COLOR_YELLOW, DEFAULT_FONT, True, True)
 
-        self.view.draw_text("|",
-                            [self.view.width // 2 - 100, 590],
-                            155, COLOR_WHITE, DEFAULT_FONT, True, True)
+            self.view.draw_text("SCORE: " + str(self.scores[i]),
+                                [x, 600],
+                                35, COLOR_WHITE, DEFAULT_FONT, True, True)
 
-        self.view.draw_text("PLAYER",
-                            [self.view.width // 2, 550],
-                            60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.view.draw_text("SCORE: " + str(self.scores[1]),
-                            [self.view.width // 2, 600],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
+        self.view.draw_text("PRESS [SPACE] TO RETURN TO START",
+                            [self.view.width // 2, 900],
+                            60, COLOR_WHITE, DEFAULT_FONT, True, True)
 
-        self.view.draw_text("PRESS",
-                            [self.view.width // 2, 750],
-                            60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.view.draw_text("[SPACE]",
-                            [self.view.width // 2, 800],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.view.draw_text("TO PLAY",
-                            [self.view.width // 2, 840],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
-
-        self.view.draw_text("|",
-                            [self.view.width // 2 + 100, 590],
-                            155, COLOR_WHITE, DEFAULT_FONT, True, True)
-
-        self.view.draw_text("AGENT-H",
-                            [self.view.width // 2 + 240, 550],
-                            60, COLOR_YELLOW, DEFAULT_FONT, True, True)
-        self.view.draw_text("AI: " + self.ai_difficulties[self.ai_h],
-                            [self.view.width // 2 + 240, 600],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
-        self.view.draw_text("SCORE: " + str(self.scores[2]),
-                            [self.view.width // 2 + 240, 640],
-                            35, COLOR_WHITE, DEFAULT_FONT, True, True)
 
 #   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT   SUPPORT

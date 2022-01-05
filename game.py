@@ -162,13 +162,13 @@ class Game:
         self.view.fill(COLOR_DARK_GRAY)
 
         self.view.draw_text("TETRIS",
-                            [150, 15],
+                            [15, 15],
                             180, COLOR_YELLOW, DEFAULT_FONT, False, False)
         self.view.draw_text("BATTLE",
-                            [750, 15],
+                            [615, 15],
                             80, COLOR_RED, DEFAULT_FONT, True, False)
         self.view.draw_text("ROYALE",
-                            [750, 75],
+                            [615, 75],
                             80, COLOR_RED, DEFAULT_FONT, True, False)
 
         for i in range(len(self.game_envs)):

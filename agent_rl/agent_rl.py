@@ -12,7 +12,8 @@ from rl.memory import SequentialMemory
 
 
 class AgentRL(Agent):
-    def __init__(self, path):
+    def __init__(self, path, skip_action=False):
+        self.skip_action = int(skip_action)
         self.model = tf.keras.Sequential([
             # 1 state, 20 rows, 10 cols, 3 matricies: locked, falling and next figures
             layers.Input(shape=(1, 20, 10, 3)),
@@ -34,14 +35,14 @@ class AgentRL(Agent):
             layers.Dense(16),
             layers.Activation("relu"),
 
-            layers.Dense(4)])
+            layers.Dense(4 + int(self.skip_action))])
 
-        policy = MaxBoltzmannQPolicy(eps=0.8)
+        policy = MaxBoltzmannQPolicy(eps=1.0)
         memory = SequentialMemory(limit=2048, window_length=1)
         self.dqn = DQNAgent(model=self.model,
                             memory=memory,
                             policy=policy,
-                            nb_actions=4,
+                            nb_actions=4+int(self.skip_action),
                             gamma=0.99,
                             nb_steps_warmup=256,
                             batch_size=64,
@@ -74,4 +75,8 @@ class AgentRL(Agent):
 
     def get_action(self, game_map, shape, next_shape):
         observation = self._encode_observation(game_map, shape, next_shape)
-        return self.dqn.forward(observation) + 1
+        action = self.dqn.forward(observation)
+        if self.skip_action:
+            return action
+        else:
+            return action + 1

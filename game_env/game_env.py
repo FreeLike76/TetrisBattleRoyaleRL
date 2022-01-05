@@ -1,10 +1,13 @@
 import numpy as np
 from game_env.shapes import Shape
 from settings import *
+from gym import Env
+from gym.spaces import Discrete
 
 
-class GameEnv:
+class GameEnv(Env):
     def __init__(self):
+        self.action_space = Discrete(5)
         # coord
         self.map = np.ones((GAME_SHAPE_TOP_HIDDEN + 20 + GAME_SHAPE_BORDERS,
                             GAME_SHAPE_BORDERS + 10 + GAME_SHAPE_BORDERS), dtype=np.int32)

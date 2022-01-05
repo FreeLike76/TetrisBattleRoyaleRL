@@ -1,5 +1,6 @@
 import numpy as np
 
+from agent import Agent
 from settings import *
 
 import tensorflow as tf
@@ -10,12 +11,8 @@ from rl.policy import MaxBoltzmannQPolicy
 from rl.memory import SequentialMemory
 
 
-class Agent:
-    def __init__(self):
-        self.dqn = None
-        self.model = None
-
-    def build_model(self):
+class AgentRL(Agent):
+    def __init__(self, path):
         self.model = tf.keras.Sequential([
             # 1 state, 20 rows, 10 cols, 3 matricies: locked, falling and next figures
             layers.Input(shape=(1, 20, 10, 3)),
@@ -37,15 +34,14 @@ class Agent:
             layers.Dense(16),
             layers.Activation("relu"),
 
-            layers.Dense(5)])
+            layers.Dense(4)])
 
-    def build_agent(self):
         policy = MaxBoltzmannQPolicy(eps=0.8)
         memory = SequentialMemory(limit=2048, window_length=1)
         self.dqn = DQNAgent(model=self.model,
                             memory=memory,
                             policy=policy,
-                            nb_actions=5,
+                            nb_actions=4,
                             gamma=0.99,
                             nb_steps_warmup=256,
                             batch_size=64,
@@ -53,10 +49,7 @@ class Agent:
                             enable_double_dqn=True,
                             enable_dueling_network=True)
 
-    def compile(self):
         self.dqn.compile(tf.keras.optimizers.Adam(learning_rate=0.001, clipnorm=1.0), metrics=["mean_squared_error"])
-
-    def load_model_weights(self, path):
         self.dqn.load_weights(path)
 
     def _encode_observation(self, game_map, shape, next_shape):
@@ -81,4 +74,4 @@ class Agent:
 
     def get_action(self, game_map, shape, next_shape):
         observation = self._encode_observation(game_map, shape, next_shape)
-        return self.dqn.forward(observation)
+        return self.dqn.forward(observation) + 1

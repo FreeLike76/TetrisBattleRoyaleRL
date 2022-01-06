@@ -8,6 +8,7 @@ from gym.spaces import Discrete
 class GameEnv(Env):
     def __init__(self):
         self.action_space = Discrete(5)
+        self.observation_space = None
         # coord
         self.map = np.ones((GAME_SHAPE_TOP_HIDDEN + 20 + GAME_SHAPE_BORDERS,
                             GAME_SHAPE_BORDERS + 10 + GAME_SHAPE_BORDERS), dtype=np.int32)
@@ -23,22 +24,25 @@ class GameEnv(Env):
     def step(self, action):
         reward = 0
         if not self.running:
-            return reward
+            return self._state_observe(), reward, not self.running, {}
+        reward += self._reward_for_alive()
         # actions:
         # 0 is skip
+        if action == 0:
+            reward += self._reward_for_skip_action()
         # 1 is left
-        # 2 is right
-        # 3 is down
-        # 4 is rotate
         if action == 1:
             if self.can_move(self.shape.x - 1, int(self.shape.y), self.shape.get_shape()):
                 self.shape.x -= 1
+        # 2 is right
         elif action == 2:
             if self.can_move(self.shape.x + 1, int(self.shape.y), self.shape.get_shape()):
                 self.shape.x += 1
+        # 3 is down
         elif action == 3:
             if self.can_move(self.shape.x, int(self.shape.y + 1), self.shape.get_shape()):
                 self.shape.y += 1
+        # 4 is rotate
         elif action == 4:
             if self.can_move(self.shape.x, int(self.shape.y), self.shape.get_rotated()):
                 self.shape.rotate()
@@ -48,10 +52,12 @@ class GameEnv(Env):
             self.shape.y += FALL_SPEED
         else:
             self.lock_figure()
+            reward += self._reward_after_lock_figure()
 
-        reward += self.remove_full_rows()
+        cleared = self.remove_full_rows()
+        reward += self._reward_for_clear_rows(cleared)
 
-        return reward
+        return self._state_observe(), reward, not self.running, {}
 
     def at(self, x, y):
         return self.map[GAME_SHAPE_TOP_HIDDEN + y, GAME_SHAPE_BORDERS + x]
@@ -75,11 +81,11 @@ class GameEnv(Env):
             self.running = False
 
     def remove_full_rows(self):
-        reward = 0
+        cleared = 0
         full = self.map[GAME_SHAPE_TOP_HIDDEN: -GAME_SHAPE_BORDERS, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS]
         full = np.where(full.sum(axis=1) == 10)[0]
         if full.size > 0:
-            reward = full.size * 10
+            cleared = full.size
 
             # to get indexes of the game screen
             full = full + GAME_SHAPE_TOP_HIDDEN
@@ -101,5 +107,46 @@ class GameEnv(Env):
                     self.map[partial, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS]
                 # everything above must be cleared
                 self.map[0: bottom-partial.size, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = 0
-        return reward
+        return cleared
 
+    def _reward_for_alive(self):
+        return 0
+
+    def _reward_for_skip_action(self):
+        return 0
+
+    def _reward_after_lock_figure(self):
+        return 0
+
+    def _reward_for_clear_rows(self, cleared):
+        return cleared * 10
+
+    def _state_gen(self):
+        """Re-init state of game"""
+        self.running = True
+
+        self.map = np.ones((GAME_SHAPE_TOP_HIDDEN + 20 + GAME_SHAPE_BORDERS,
+                            GAME_SHAPE_BORDERS + 10 + GAME_SHAPE_BORDERS), dtype=np.int32)
+        self.map[0: -GAME_SHAPE_BORDERS, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = 0
+
+        self.shape = Shape()
+        self.next_shape = Shape()
+
+    def render(self, mode="human"):
+        """What to visualize"""
+        pass
+
+    def reset(self):
+        """Reset the state to start"""
+        # restart state
+        self._state_gen()
+        # not terminal
+        return self._state_observe()
+
+    def _state_observe(self):
+        """
+        What the agent will see during training
+        Later this function will have to be implemented in agent's class
+        The inputs will be: map, shape, next_shape
+        """
+        return None

@@ -151,12 +151,14 @@ class Game:
 
         for i in range(len(self.game_envs)):
             if i == 0:
-                self.scores[i] += self.game_envs[i].step(self.play_inputs)
+                _, reward, _, _ = self.game_envs[i].step(self.play_inputs)
+                self.scores[i] += reward
                 self.play_inputs = 0
             else:
-                self.scores[i] += self.game_envs[i].step(self.agents[i - 1].get_action(self.game_envs[i].map,
+                _, reward, _, _ = self.game_envs[i].step(self.agents[i - 1].get_action(self.game_envs[i].map,
                                                                                        self.game_envs[i].shape,
                                                                                        self.game_envs[i].next_shape))
+                self.scores[i] += reward
 
     def play_draw(self):
         self.view.fill(COLOR_DARK_GRAY)

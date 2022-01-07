@@ -37,7 +37,7 @@ class AgentRL(Agent):
 
             layers.Dense(4 + int(self.skip_action))])
 
-        policy = MaxBoltzmannQPolicy(eps=1.0)
+        policy = MaxBoltzmannQPolicy(eps=0.2)
         memory = SequentialMemory(limit=2048, window_length=1)
         self.dqn = DQNAgent(model=self.model,
                             memory=memory,

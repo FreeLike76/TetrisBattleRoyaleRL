@@ -14,6 +14,9 @@ class GameEnv(Env):
                             GAME_SHAPE_BORDERS + 10 + GAME_SHAPE_BORDERS), dtype=np.int32)
         self.map[0: -GAME_SHAPE_BORDERS, GAME_SHAPE_BORDERS: -GAME_SHAPE_BORDERS] = 0
 
+        # params
+        self.gravity = FALL_SPEED
+
         # shape
         self.shape = Shape()
         self.next_shape = Shape()
@@ -48,8 +51,8 @@ class GameEnv(Env):
                 self.shape.rotate()
 
         # move down
-        if self.can_move(self.shape.x, int(self.shape.y + FALL_SPEED), self.shape.get_shape()):
-            self.shape.y += FALL_SPEED
+        if self.can_move(self.shape.x, int(self.shape.y + self.gravity), self.shape.get_shape()):
+            self.shape.y += self.gravity
         else:
             self.lock_figure()
             reward += self._reward_after_lock_figure()

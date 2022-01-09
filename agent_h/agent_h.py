@@ -31,14 +31,31 @@ class AgentH(Agent):
             if score > best_score:
                 best_score = score
                 best_action = 1
+
+            # OR ROTATED
+            if self.can_move(game_map, shape.x, int(shape.y), new_shape.get_rotated()):
+                new_shape_rotated = copy.copy(new_shape)
+                new_shape_rotated.rotate()
+                score_rotated = self.heuristic(self.land(game_map.copy(), new_shape_rotated))
+                if score_rotated > best_score:
+                    best_score = score
+                    best_action = 1
+
             # IF CAN MOVE LEFT TWICE
             if self.can_move(game_map, new_shape.x - 1, int(new_shape.y), new_shape.get_shape()):
-                new_shape = copy.copy(new_shape)
                 new_shape.x -= 1
                 score = self.heuristic(self.land(game_map.copy(), new_shape))
                 if score > best_score:
                     best_score = score
                     best_action = 1
+                # OR ROTATED
+                if self.can_move(game_map, shape.x, int(shape.y), new_shape.get_rotated()):
+                    new_shape_rotated = copy.copy(new_shape)
+                    new_shape_rotated.rotate()
+                    score_rotated = self.heuristic(self.land(game_map.copy(), new_shape_rotated))
+                    if score_rotated > best_score:
+                        best_score = score
+                        best_action = 1
 
         # IF CAN MOVE RIGHT ONCE
         if self.can_move(game_map, shape.x + 1, int(shape.y), shape.get_shape()):
@@ -48,14 +65,31 @@ class AgentH(Agent):
             if score > best_score:
                 best_score = score
                 best_action = 2
+
+                # OR ROTATED
+            if self.can_move(game_map, shape.x, int(shape.y), new_shape.get_rotated()):
+                new_shape_rotated = copy.copy(new_shape)
+                new_shape_rotated.rotate()
+                score_rotated = self.heuristic(self.land(game_map.copy(), new_shape_rotated))
+                if score_rotated > best_score:
+                    best_score = score
+                    best_action = 2
+
             # IF CAN MOVE RIGHT TWICE
             if self.can_move(game_map, new_shape.x + 1, int(new_shape.y), new_shape.get_shape()):
-                new_shape = copy.copy(new_shape)
                 new_shape.x += 1
                 score = self.heuristic(self.land(game_map.copy(), new_shape))
                 if score > best_score:
                     best_score = score
                     best_action = 2
+                # OR ROTATED
+                if self.can_move(game_map, shape.x, int(shape.y), new_shape.get_rotated()):
+                    new_shape_rotated = copy.copy(new_shape)
+                    new_shape_rotated.rotate()
+                    score_rotated = self.heuristic(self.land(game_map.copy(), new_shape_rotated))
+                    if score_rotated > best_score:
+                        best_score = score
+                        best_action = 2
 
         # IF CAN ROTATE
         if self.can_move(game_map, shape.x, int(shape.y), shape.get_rotated()):

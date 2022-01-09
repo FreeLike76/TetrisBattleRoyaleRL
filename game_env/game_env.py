@@ -119,7 +119,7 @@ class GameEnv(Env):
         return 0
 
     def _reward_after_lock_figure(self):
-        return 0
+        return 1
 
     def _reward_for_clear_rows(self, cleared):
         return cleared * 10

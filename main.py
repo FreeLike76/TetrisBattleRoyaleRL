@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     agents = {"Rand": AgentRand(),
               "Agent-RL9": AgentRL(r"agent_rl/saved/dqn_v9.h5", skip_action=False),
-              "Agent-RL14": AgentRL(r"agent_rl/saved/dqn_v14.h5", skip_action=True),
-              "Agent-RL16": AgentRL(r"agent_rl/saved/dqn_v16.h5", skip_action=True),
+              #"Agent-RL14": AgentRL(r"agent_rl/saved/dqn_v14.h5", skip_action=True),
+              "Agent-RL18": AgentRL(r"agent_rl/saved/dqn_v18.h5", skip_action=True),
               "Heuristic": AgentH()}
 
     app = Game(agents)

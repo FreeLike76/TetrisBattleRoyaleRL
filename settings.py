@@ -28,3 +28,4 @@ COLOR_LIGHT_GRAY = (100, 100, 100)
 
 # FONT
 DEFAULT_FONT = "unispace"
+
